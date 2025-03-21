@@ -1,0 +1,304 @@
+:root {
+  --main-bg-clr: hsl(0, 0%, 100%, 1);
+  --title-txt-clr: hsl(0, 0%, 0%, 0.6);
+  --input-bg-clr: hsl(0, 0%, 96%, 1);
+  --pleaceholder-txt-clr: hsl(0, 0%, 73%, 1);
+  --normal-txt-clr: hsl(0, 0%, 38%, 1);
+  --crossed-txt-clr: hsl(0, 0%, 73%, 1);
+  --input-stroke-clr: hsl(0, 0%, 0%, 0.15);
+  --checbox-clr: hsl(0, 0%, 100%, 1);
+  --checbox-selected-clr: hsl(203, 11%, 85%, 1);
+}
+
+/* Reset */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+/* Remove list styles on ul, ol elements with a list role*/
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+html,
+body {
+  height: 100%;
+}
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Make images easier to work with */
+img,
+picture,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+/* Utility Classes */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* General Styling */
+
+body {
+  background-color: var(--main-bg-clr);
+  color: var(--normal-txt-clr);
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  --max-width: 650px;
+  --horizontal-padding: 1rem;
+
+  width: min(var(--max-width), calc(100% - (var(--horizontal-padding) * 2)));
+  margin-inline: auto;
+}
+
+/* Header */
+
+.header {
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--title-txt-clr);
+}
+
+.search-container {
+  --max-width: 500px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--input-bg-clr);
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin: 0 auto;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.25rem;
+  color: var(--normal-txt-clr);
+  flex: 1;
+}
+
+.search-input::placeholder {
+  color: var(--pleaceholder-txt-clr);
+}
+
+.search-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.search-button img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (min-width: 50em) {
+  .search-button img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .search-container {
+    padding: 0.875rem 1rem;
+  }
+}
+
+/* Task Input */
+.task-input-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--input-bg-clr);
+  border-radius: 0.25rem;
+  padding: 0.8rem 1rem;
+  margin: 1.25rem 0;
+  border-bottom: 2px solid var(--pleaceholder-txt-clr);
+}
+
+.task-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.25rem;
+  color: var(--normal-txt-clr);
+  flex: 1;
+}
+
+.task-input::placeholder {
+  color: var(--pleaceholder-txt-clr);
+}
+
+#add-task-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--normal-txt-clr);
+}
+
+#add-task-btn img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Task List */
+
+#completed-status {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--crossed-txt-clr);
+  margin-bottom: 1rem;
+}
+
+#todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--main-bg-clr);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-stroke-clr);
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
+
+.todo-item input[type="checkbox"] {
+  margin-right: 0.75rem;
+  transform: scale(1.2);
+}
+
+.todo-item label {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--normal-txt-clr);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.todo-item.completed label {
+  color: var(--crossed-txt-clr);
+  text-decoration: line-through;
+}
+
+.todo-item.completed .edit-btn,
+.todo-item.completed .delete-btn {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.todo-item .edit-btn,
+.todo-item .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.todo-item .edit-btn img,
+.todo-item .delete-btn img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.todo-item .edit-btn:hover img,
+.todo-item .delete-btn:hover img {
+  opacity: 0.7;
+}
+
+/* Custom Checkbox */
+
+[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--checbox-selected-clr);
+  vertical-align: middle;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  outline: 0;
+  flex-grow: 0;
+  border-radius: 50%;
+  background-color: var(--checbox-clr);
+  transition: background 300ms;
+  cursor: pointer;
+}
+
+/* Pseudo element for check styling */
+
+[type="checkbox"]::before {
+  content: "";
+  color: transparent;
+  display: block;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  border: 0;
+  background-color: transparent;
+  background-size: contain;
+  box-shadow: inset 0 0 0 1px var(--checbox-selected-clr);
+}
+
+/* Checked */
+
+[type="checkbox"]:checked {
+  background-color: currentcolor;
+}
+
+[type="checkbox"]:checked::before {
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+}
