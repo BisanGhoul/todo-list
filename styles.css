@@ -78,3 +78,53 @@ body {
   width: min(var(--max-width), calc(100% - (var(--horizontal-padding) * 2)));
   margin-inline: auto;
 }
+
+/* Header */
+
+.header {
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--title-txt-clr);
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--input-bg-clr);
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin: 0 auto;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.25rem;
+  color: var(--normal-txt-clr);
+  flex: 1;
+}
+
+.search-input::placeholder {
+  color: var(--pleaceholder-txt-clr);
+}
+
+.search-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.search-button img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
