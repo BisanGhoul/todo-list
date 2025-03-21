@@ -5,6 +5,9 @@
   --pleaceholder-txt-clr: hsl(0, 0%, 73%, 1);
   --normal-txt-clr: hsl(0, 0%, 38%, 1);
   --crossed-txt-clr: hsl(0, 0%, 73%, 1);
+  --input-stroke-clr: hsl(0, 0%, 0%, 0.15);
+  --checbox-clr: hsl(0, 0%, 100%, 1);
+  --checbox-selected-clr: hsl(203, 11%, 85%, 1);
 }
 
 /* Reset */
@@ -171,4 +174,118 @@ body {
 #add-task-btn img {
   width: 1.25rem;
   height: 1.25rem;
+}
+
+/* Task List */
+
+#completed-status {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--crossed-txt-clr);
+  margin-bottom: 1rem;
+}
+
+#todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--main-bg-clr);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-stroke-clr);
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
+
+.todo-item input[type="checkbox"] {
+  margin-right: 0.75rem;
+  transform: scale(1.2);
+}
+
+.todo-item label {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--normal-txt-clr);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.todo-item.completed label {
+  color: var(--crossed-txt-clr);
+  text-decoration: line-through;
+}
+
+.todo-item.completed .edit-btn,
+.todo-item.completed .delete-btn {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.todo-item .edit-btn,
+.todo-item .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.todo-item .edit-btn img,
+.todo-item .delete-btn img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.todo-item .edit-btn:hover img,
+.todo-item .delete-btn:hover img {
+  opacity: 0.7;
+}
+
+/* Custom Checkbox */
+
+[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--checbox-selected-clr);
+  vertical-align: middle;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  outline: 0;
+  flex-grow: 0;
+  border-radius: 50%;
+  background-color: var(--checbox-clr);
+  transition: background 300ms;
+  cursor: pointer;
+}
+
+/* Pseudo element for check styling */
+
+[type="checkbox"]::before {
+  content: "";
+  color: transparent;
+  display: block;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  border: 0;
+  background-color: transparent;
+  background-size: contain;
+  box-shadow: inset 0 0 0 1px var(--checbox-selected-clr);
+}
+
+/* Checked */
+
+[type="checkbox"]:checked {
+  background-color: currentcolor;
+}
+
+[type="checkbox"]:checked::before {
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
 }

@@ -36,6 +36,76 @@
           <img src="assets/img/add-icon-40.svg" alt="" />
         </button>
       </div>
+      <section aria-labelledby="completed-status">
+        <p id="completed-status">COMPLETED 1/3</p>
+        <ul id="todo-list" role="list">
+          <li class="todo-item">
+            <input
+              type="checkbox"
+              id="task-1"
+              role="checkbox"
+              aria-checked="false"
+              tabindex="0"
+            />
+            <label for="task-1">Laundry</label>
+            <button class="edit-btn" aria-label="Edit task Laundry">
+              <img src="assets/img/edit-icon-35.svg" alt="Edit task" />
+            </button>
+            <button class="delete-btn" aria-label="Delete task Laundry">
+              <img src="assets/img/delete-icon-40.svg" alt="Delete task" />
+            </button>
+          </li>
+
+          <li class="todo-item completed">
+            <input
+              type="checkbox"
+              id="task-2"
+              role="checkbox"
+              aria-checked="true"
+              tabindex="0"
+              checked
+            />
+            <label for="task-2"><s>Buy groceries</s></label>
+            <button
+              class="edit-btn"
+              aria-label="Edit task Buy groceries"
+              disabled
+            >
+              <img
+                src="assets/img/edit-icon-disables-35.svg"
+                alt="Edit disabled"
+              />
+            </button>
+            <button
+              class="delete-btn"
+              aria-label="Delete task Buy groceries"
+              disabled
+            >
+              <img
+                src="assets/img/delete-icon-disabled-40.svg"
+                alt="Delete disabled"
+              />
+            </button>
+          </li>
+
+          <li class="todo-item">
+            <input
+              type="checkbox"
+              id="task-3"
+              role="checkbox"
+              aria-checked="false"
+              tabindex="0"
+            />
+            <label for="task-3">Read a book</label>
+            <button class="edit-btn" aria-label="Edit task Read a book">
+              <img src="assets/img/edit-icon-35.svg" alt="Edit task" />
+            </button>
+            <button class="delete-btn" aria-label="Delete task Read a book">
+              <img src="assets/img/delete-icon-40.svg" alt="Delete task" />
+            </button>
+          </li>
+        </ul>
+      </section>
     </main>
   </body>
 </html>
