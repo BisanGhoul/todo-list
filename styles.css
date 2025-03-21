@@ -1,3 +1,15 @@
+:root{
+
+    --main-bg-clr: hsl(0,0%,100%,1);
+    --title-txt-clr: hsl(0, 0%, 0%, 0.6);
+    --input-bg-clr: hsl(0, 0%, 96%, 1);
+    --pleaceholder-txt-clr: hsl(0, 0%, 73%, 1);
+    --normal-txt-clr: hsl(0, 0%, 38%, 1);
+    --crossed-txt-clr: hsl(0, 0%, 73%, 1);
+   
+}
+
+
 /* Reset */
 
 /* Remove default margin */
