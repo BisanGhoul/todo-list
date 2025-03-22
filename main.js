@@ -1,9 +1,28 @@
-const taskList = document.querySelector("[data-tasks]");
+const API_URL = "https://dummyjson.com/todos";
+const TODO_LIMIT = 5;
 
-const tasks = [
-  { id: 1, todo: "Laundry", completed: false },
-  { id: 2, todo: "Buy groceries", completed: true },
-];
+const taskList = document.querySelector("[data-tasks]");
+let tasks = [];
+
+async function init() {
+     tasks = await fetchTodos();
+     tasks.forEach((task) => taskList.appendChild(createTodoElement(task)));
+
+    console.log(tasks); 
+}
+
+init();
+
+async function fetchTodos() {
+    try {
+        const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
+        const data = await response.json();
+        return data.todos;
+    } catch (error) {
+        console.error("Error fetching todos:", error);
+        return [];
+    }
+}
 
 function createTodoElement(task) {
   const li = document.createElement("li");
@@ -56,4 +75,3 @@ function createTodoElement(task) {
   return li;
 }
 
-tasks.forEach((task) => taskList.appendChild(createTodoElement(task)));
