@@ -46,6 +46,7 @@ function createTodoElement(task) {
   checkbox.id = `task-${task.id}`;
   checkbox.checked = task.completed;
   checkbox.setAttribute("aria-checked", task.completed.toString());
+  checkbox.addEventListener("change", () => toggleTaskCompletion(task.id));
 
   const taskLabel = document.createElement("label");
   taskLabel.htmlFor = `task-${task.id}`;
@@ -81,6 +82,14 @@ function createTodoElement(task) {
   li.appendChild(taskDeleteBtn);
 
   return li;
+}
+
+function toggleTaskCompletion(taskId) {
+  tasks = tasks.map((task) => {
+    task.id === taskId ? { ...task, completed: !task.completed } : task;
+  });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  renderList(tasks);
 }
 
 function renderList() {
