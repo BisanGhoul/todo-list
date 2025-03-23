@@ -31,6 +31,32 @@ async function loadTasks() {
   }
 }
 
+async function deleteTask(taskId) {
+  const taskToDelete = tasks.find((task) => task.id === taskId);
+  if (!taskToDelete) return;
+
+  const userConfirmed = confirm(
+    `Are you sure you want to delete "${taskToDelete.todo}"?`
+  );
+  if (!userConfirmed) return;
+  
+  tasks = tasks.filter((task) => task.id !== taskId);
+  saveAndRender();
+
+  try {
+    const response = await fetch(`${API_URL}/${taskId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      console.log(`Task ${taskId} has ben successfully deleted`);
+    } else {
+      console.error("Task deletion failed");
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+
 async function fetchTodos() {
   try {
     const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
@@ -82,6 +108,7 @@ function createTodoElement(task) {
   const taskDeleteBtn = document.createElement("button");
   taskDeleteBtn.classList.add("delete-btn");
   taskDeleteBtn.setAttribute("aria-label", `Delete task ${task.todo}`);
+  taskDeleteBtn.addEventListener("click", () => deleteTask(task.id));
   const deleteIcon = document.createElement("img");
   deleteIcon.src = task.completed
     ? "assets/img/delete-icon-disabled-40.svg"
