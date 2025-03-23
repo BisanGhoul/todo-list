@@ -105,7 +105,7 @@ function toggleTaskCompletion(taskId) {
   renderList();
 }
 
-function addTask() {
+async function addTask() {
   const taskContent = taskInput.value.trim();
 
   if (taskContent == null || taskContent === "") {
@@ -119,6 +119,23 @@ function addTask() {
   tasks.push(createdTask);
 
   saveAndRender();
+
+  try {
+    const response = await fetch(API_URL + "/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: createTask.id,
+        todo: createdTask.todo,
+        completed: false,
+        userId: 1,
+      }),
+    });
+    const result = await response.json();
+    console.log("Added:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 function createTask(content) {
