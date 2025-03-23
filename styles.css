@@ -237,7 +237,7 @@ body {
 .todo-item.completed .edit-btn,
 .todo-item.completed .delete-btn {
   opacity: 0.5;
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
 }
 
 .todo-item .edit-btn,
