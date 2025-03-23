@@ -2,6 +2,9 @@ const API_URL = "https://dummyjson.com/todos";
 const TODO_LIMIT = 5;
 
 const taskList = document.querySelector("[data-tasks]");
+const taskInput = document.querySelector("[data-task-input]");
+const addTaskButton = document.querySelector("[data-new-task-btn]");
+
 let tasks = [];
 
 async function init() {
@@ -102,10 +105,56 @@ function toggleTaskCompletion(taskId) {
   renderList();
 }
 
+async function addTask() {
+  const taskContent = taskInput.value.trim();
+
+  if (taskContent == null || taskContent === "") {
+    alert("Please Enter a valid task!");
+    return;
+  }
+
+  const createdTask = createTask(taskContent);
+  taskInput.value = "";
+
+  tasks.push(createdTask);
+
+  saveAndRender();
+
+  try {
+    const response = await fetch(API_URL + "/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: createTask.id,
+        todo: createdTask.todo,
+        completed: false,
+        userId: 1,
+      }),
+    });
+    const result = await response.json();
+    console.log("Added:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+function createTask(content) {
+  return { id: Date.now().toString(), todo: content, completed: false };
+}
+
+function saveAndRender() {
+  save();
+  renderList();
+}
+
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 function renderList() {
   clearElement(taskList);
   tasks
-    .filter((task) => task && task.id !== undefined) 
+    .filter((task) => task && task.id !== undefined)
     .forEach((task) => taskList.appendChild(createTodoElement(task)));
 }
 
@@ -114,3 +163,9 @@ function clearElement(element) {
     element.removeChild(element.firstChild);
   }
 }
+
+// Event Listeners
+addTaskButton.addEventListener("click", addTask);
+taskInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addTask();
+});
