@@ -2,6 +2,9 @@ const API_URL = "https://dummyjson.com/todos";
 const TODO_LIMIT = 5;
 
 const taskList = document.querySelector("[data-tasks]");
+const taskInput = document.querySelector("[data-task-input]");
+const addTaskButton = document.querySelector("[data-new-task-btn]");
+
 let tasks = [];
 
 async function init() {
@@ -102,10 +105,39 @@ function toggleTaskCompletion(taskId) {
   renderList();
 }
 
+function addTask() {
+  const taskContent = taskInput.value.trim();
+
+  if (taskContent == null || taskContent === "") {
+    alert("Please Enter a valid task!");
+    return;
+  }
+
+  const createdTask = createTask(taskContent);
+  taskInput.value = "";
+
+  tasks.push(createdTask);
+
+  saveAndRender();
+}
+
+function createTask(content) {
+  return { id: Date.now().toString(), todo: content, completed: false };
+}
+
+function saveAndRender() {
+  save();
+  renderList();
+}
+
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 function renderList() {
   clearElement(taskList);
   tasks
-    .filter((task) => task && task.id !== undefined) 
+    .filter((task) => task && task.id !== undefined)
     .forEach((task) => taskList.appendChild(createTodoElement(task)));
 }
 
@@ -114,3 +146,9 @@ function clearElement(element) {
     element.removeChild(element.firstChild);
   }
 }
+
+// Event Listeners
+addTaskButton.addEventListener("click", addTask);
+taskInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addTask();
+});
