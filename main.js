@@ -32,6 +32,14 @@ async function loadTasks() {
 }
 
 async function deleteTask(taskId) {
+  const taskToDelete = tasks.find((task) => task.id === taskId);
+  if (!taskToDelete) return;
+
+  const userConfirmed = confirm(
+    `Are you sure you want to delete "${taskToDelete.todo}"?`
+  );
+  if (!userConfirmed) return;
+  
   tasks = tasks.filter((task) => task.id !== taskId);
   saveAndRender();
 
