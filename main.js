@@ -1,0 +1,218 @@
+const API_URL = "https://dummyjson.com/todos";
+const TODO_LIMIT = 5;
+
+const taskList = document.querySelector("[data-tasks]");
+const taskInput = document.querySelector("[data-task-input]");
+const addTaskButton = document.querySelector("[data-new-task-btn]");
+const taskCount = document.querySelector("[data-tasks-count]");
+
+let tasks = [];
+
+async function init() {
+  tasks = await loadTasks();
+  if (!Array.isArray(tasks) || tasks.length === 0) {
+    console.error("No tasks available to render.");
+    return;
+  }
+  renderList();
+  updateTaskCount();
+}
+
+init();
+
+async function loadTasks() {
+  const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  if (storedTasks.length > 0) {
+    console.log(storedTasks);
+    return storedTasks;
+  } else {
+    const fetchedTasks = await fetchTodos();
+    localStorage.setItem("tasks", JSON.stringify(fetchedTasks));
+    return fetchedTasks;
+  }
+}
+
+function updateTaskCount() {
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed).length;
+
+  taskCount.textContent = `${completedTasks}/${totalTasks}`;
+}
+
+async function deleteTask(taskId) {
+  tasks = tasks.filter((task) => task.id !== taskId);
+  saveAndRender();
+
+  try {
+    const response = await fetch(`${API_URL}/${taskId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      console.log(`Task ${taskId} has ben successfully deleted`);
+    } else {
+      console.error("Task deletion failed");
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+
+async function fetchTodos() {
+  try {
+    const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
+    const data = await response.json();
+    console.log("Fetched todos:", data);
+    return Array.isArray(data.todos) ? data.todos : [];
+  } catch (error) {
+    console.error("Error fetching todos:", error);
+    return [];
+  }
+}
+
+function createTodoElement(task) {
+  if (!task || !task.todo) {
+    console.error("Invalid task object:", task);
+    return document.createElement("li");
+  }
+
+  const li = document.createElement("li");
+  li.classList.add("todo-item");
+  if (task.completed) li.classList.add("completed");
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.id = `task-${task.id}`;
+  checkbox.checked = task.completed;
+  checkbox.setAttribute("aria-checked", task.completed.toString());
+  checkbox.addEventListener("change", () => toggleTaskCompletion(task.id));
+
+  const taskLabel = document.createElement("label");
+  taskLabel.htmlFor = `task-${task.id}`;
+  if (task.completed) {
+    const crossedOut = document.createElement("s");
+    crossedOut.textContent = task.todo;
+    taskLabel.appendChild(crossedOut);
+  } else {
+    taskLabel.textContent = task.todo;
+  }
+
+  const taskEditBtn = document.createElement("button");
+  taskEditBtn.classList.add("edit-btn");
+  taskEditBtn.setAttribute("aria-label", `Edit task ${task.todo}`);
+  const taskEditImg = document.createElement("img");
+  taskEditImg.src = task.completed
+    ? "assets/img/edit-icon-disables-35.svg"
+    : "assets/img/edit-icon-35.svg";
+  taskEditBtn.appendChild(taskEditImg);
+
+  const taskDeleteBtn = document.createElement("button");
+  taskDeleteBtn.classList.add("delete-btn");
+  taskDeleteBtn.setAttribute("aria-label", `Delete task ${task.todo}`);
+  taskDeleteBtn.addEventListener("click", () => deleteTask(task.id));
+  const deleteIcon = document.createElement("img");
+  deleteIcon.src = task.completed
+    ? "assets/img/delete-icon-disabled-40.svg"
+    : "assets/img/delete-icon-40.svg";
+  taskDeleteBtn.appendChild(deleteIcon);
+
+  li.appendChild(checkbox);
+  li.appendChild(taskLabel);
+  li.appendChild(taskEditBtn);
+  li.appendChild(taskDeleteBtn);
+
+  return li;
+}
+
+async function toggleTaskCompletion(taskId) {
+  tasks = tasks.map((task) => {
+    return task.id === taskId ? { ...task, completed: !task.completed } : task;
+  });
+
+  saveAndRender();
+
+  const updatedTask = tasks.find((task) => task.id === taskId);
+  if (!updatedTask) return;
+
+  try {
+    const response = await fetch(`${API_URL}/${taskId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed: updatedTask.completed }),
+    });
+
+    if (response.ok) {
+      console.log(`Task ${taskId} has been updated successfully`);
+    } else {
+      console.error("Failed to update");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+async function addTask() {
+  const taskContent = taskInput.value.trim();
+
+  if (taskContent == null || taskContent === "") {
+    alert("Please Enter a valid task!");
+    return;
+  }
+
+  const createdTask = createTask(taskContent);
+  taskInput.value = "";
+
+  tasks.push(createdTask);
+
+  saveAndRender();
+
+  try {
+    const response = await fetch(API_URL + "/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: createTask.id,
+        todo: createdTask.todo,
+        completed: false,
+        userId: 1,
+      }),
+    });
+    const result = await response.json();
+    console.log("Added:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+function createTask(content) {
+  return { id: Date.now().toString(), todo: content, completed: false };
+}
+
+function saveAndRender() {
+  save();
+  renderList();
+  updateTaskCount();
+}
+
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function renderList() {
+  clearElement(taskList);
+  tasks
+    .filter((task) => task && task.id !== undefined)
+    .forEach((task) => taskList.appendChild(createTodoElement(task)));
+}
+
+function clearElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}
+
+// Event Listeners
+addTaskButton.addEventListener("click", addTask);
+taskInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addTask();
+});

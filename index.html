@@ -1,10 +1,50 @@
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    
-</body>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="./main.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="title">Tasks</h1>
+      <div class="search-container container">
+        <label for="search" class="visually-hidden">Search tasks</label>
+        <input
+          type="text"
+          id="search"
+          class="search-input"
+          placeholder="Search"
+        />
+        <button class="search-button" aria-label="Search">
+          <img src="assets/img/search-icon-35.svg" alt="" />
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="task-input-container">
+        <label for="new-task" class="visually-hidden">Add a new task</label>
+        <input
+          type="text"
+          id="new-task"
+          class="task-input"
+          placeholder="Add a task..."
+          aria-label="New task"
+          data-task-input
+        />
+        <button id="add-task-btn" aria-label="Add task" data-new-task-btn>
+          <img src="assets/img/add-icon-40.svg" alt="" />
+        </button>
+      </div>
+      <section aria-labelledby="completed-status">
+        <p id="completed-status">COMPLETED <span data-tasks-count>1/3</span></p>
+        <ul id="todo-list" role="list" data-tasks>
+
+        </ul>
+      </section>
+    </main>
+  </body>
 </html>
