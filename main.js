@@ -14,7 +14,7 @@ async function init() {
     console.error("No tasks available to render.");
     return;
   }
-  renderList();
+  renderTasks();
   updateTaskCount();
 }
 
@@ -190,7 +190,7 @@ function createTask(content) {
 
 function saveAndRender() {
   save();
-  renderList();
+  renderTasks();
   updateTaskCount();
 }
 
@@ -198,11 +198,15 @@ function save() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function renderList() {
-  clearElement(taskList);
-  tasks
-    .filter((task) => task && task.id !== undefined)
-    .forEach((task) => taskList.appendChild(createTodoElement(task)));
+function renderTasks() {
+  renderList(tasks, taskList, createTodoElement);
+}
+
+function renderList(list, container, createElementFn) {
+  clearElement(container);
+  list
+    .filter((item) => item && item.id !== undefined)
+    .forEach((item) => container.appendChild(createElementFn(item)));
 }
 
 function clearElement(element) {
