@@ -5,6 +5,8 @@ const taskList = document.querySelector("[data-tasks]");
 const taskInput = document.querySelector("[data-task-input]");
 const addTaskButton = document.querySelector("[data-new-task-btn]");
 const taskCount = document.querySelector("[data-tasks-count]");
+const searchInput = document.querySelector("[data-search-input]");
+const searchButton = document.querySelector("[data-search-btn]");
 
 let tasks = [];
 
@@ -14,7 +16,7 @@ async function init() {
     console.error("No tasks available to render.");
     return;
   }
-  renderList();
+  renderTasks();
   updateTaskCount();
 }
 
@@ -55,6 +57,33 @@ async function deleteTask(taskId) {
     }
   } catch (error) {
     console.error("Error: ", error);
+  }
+}
+
+function search() {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const noResultsImage = document.querySelector("[data-no-search-result]");
+  if (!noResultsImage) {
+    console.error("Error: no-results image element is missing from the DOM.");
+    return;
+  }
+  let filteredTasks = [];
+
+  if (searchTerm == null || searchTerm === "") {
+    renderList(tasks, taskList, createTodoElement);
+    noResultsImage.style.display = "none";
+  } else {
+    filteredTasks = tasks.filter((task) => {
+      return task.todo.includes(searchTerm);
+    });
+
+    if (filteredTasks.length === 0) {
+      taskList.innerHTML = "";
+      noResultsImage.style.display = "flex";
+    } else {
+      noResultsImage.style.display = "none";
+      renderList(filteredTasks, taskList, createTodoElement);
+    }
   }
 }
 
@@ -190,7 +219,7 @@ function createTask(content) {
 
 function saveAndRender() {
   save();
-  renderList();
+  renderTasks();
   updateTaskCount();
 }
 
@@ -198,11 +227,15 @@ function save() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function renderList() {
-  clearElement(taskList);
-  tasks
-    .filter((task) => task && task.id !== undefined)
-    .forEach((task) => taskList.appendChild(createTodoElement(task)));
+function renderTasks() {
+  renderList(tasks, taskList, createTodoElement);
+}
+
+function renderList(list, container, createElementFn) {
+  clearElement(container);
+  list
+    .filter((item) => item && item.id !== undefined)
+    .forEach((item) => container.appendChild(createElementFn(item)));
 }
 
 function clearElement(element) {
@@ -215,4 +248,9 @@ function clearElement(element) {
 addTaskButton.addEventListener("click", addTask);
 taskInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") addTask();
+});
+
+searchButton.addEventListener("click", search);
+searchInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") search();
 });
