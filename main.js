@@ -61,19 +61,30 @@ async function deleteTask(taskId) {
 }
 
 function search() {
-  const searchTerm = searchInput.value.trim();
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const noResultsImage = document.querySelector("[data-no-search-result]");
+  if (!noResultsImage) {
+    console.error("Error: no-results image element is missing from the DOM.");
+    return;
+  }
+  let filteredTasks = [];
 
   if (searchTerm == null || searchTerm === "") {
-    renderList(tasks, taskList, createTodoElement);    
-  }else{
-  
-  const filteredList = tasks.filter((task) => {
-    return task.todo.includes(searchTerm);
-  })
+    renderList(tasks, taskList, createTodoElement);
+    noResultsImage.style.display = "none";
+  } else {
+    filteredTasks = tasks.filter((task) => {
+      return task.todo.includes(searchTerm);
+    });
 
-  renderList(filteredList, taskList, createTodoElement);
+    if (filteredTasks.length === 0) {
+      taskList.innerHTML = "";
+      noResultsImage.style.display = "flex";
+    } else {
+      noResultsImage.style.display = "none";
+      renderList(filteredTasks, taskList, createTodoElement);
+    }
   }
-
 }
 
 async function fetchTodos() {
@@ -241,5 +252,5 @@ taskInput.addEventListener("keypress", (e) => {
 
 searchButton.addEventListener("click", search);
 searchInput.addEventListener("keypress", (e) => {
-    if(e.key === "Enter") search();
-})
+  if (e.key === "Enter") search();
+});
