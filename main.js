@@ -6,9 +6,11 @@ let tasks = [];
 
 async function init() {
   tasks = await loadTasks();
+  if (!Array.isArray(tasks) || tasks.length === 0) {
+    console.error("No tasks available to render.");
+    return;
+  }
   renderList();
-
-  console.log(tasks);
 }
 
 init();
@@ -17,6 +19,7 @@ async function loadTasks() {
   const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
   if (storedTasks.length > 0) {
+    console.log(storedTasks);
     return storedTasks;
   } else {
     const fetchedTasks = await fetchTodos();
@@ -29,7 +32,8 @@ async function fetchTodos() {
   try {
     const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
     const data = await response.json();
-    return data.todos;
+    console.log("Fetched todos:", data);
+    return Array.isArray(data.todos) ? data.todos : [];
   } catch (error) {
     console.error("Error fetching todos:", error);
     return [];
@@ -37,6 +41,11 @@ async function fetchTodos() {
 }
 
 function createTodoElement(task) {
+  if (!task || !task.todo) {
+    console.error("Invalid task object:", task);
+    return document.createElement("li");
+  }
+
   const li = document.createElement("li");
   li.classList.add("todo-item");
   if (task.completed) li.classList.add("completed");
@@ -86,17 +95,18 @@ function createTodoElement(task) {
 
 function toggleTaskCompletion(taskId) {
   tasks = tasks.map((task) => {
-    task.id === taskId ? { ...task, completed: !task.completed } : task;
+    return task.id === taskId ? { ...task, completed: !task.completed } : task;
   });
+
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  renderList(tasks);
+  renderList();
 }
 
 function renderList() {
   clearElement(taskList);
-  tasks.forEach((task) => {
-    taskList.appendChild(createTodoElement(task));
-  });
+  tasks
+    .filter((task) => task && task.id !== undefined) 
+    .forEach((task) => taskList.appendChild(createTodoElement(task)));
 }
 
 function clearElement(element) {
