@@ -6,7 +6,7 @@ let tasks = [];
 
 async function init() {
   tasks = await loadTasks();
-  tasks.forEach((task) => taskList.appendChild(createTodoElement(task)));
+  renderList();
 
   console.log(tasks);
 }
@@ -81,4 +81,17 @@ function createTodoElement(task) {
   li.appendChild(taskDeleteBtn);
 
   return li;
+}
+
+function renderList() {
+  clearElement(taskList);
+  tasks.forEach((task) => {
+    taskList.appendChild(createTodoElement(task));
+  });
+}
+
+function clearElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
 }
