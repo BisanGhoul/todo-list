@@ -31,6 +31,11 @@ async function loadTasks() {
   }
 }
 
+function deleteTask(taskId) {
+  tasks = tasks.filter((task) => task.id !== taskId);
+  saveAndRender();
+}
+
 async function fetchTodos() {
   try {
     const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
@@ -82,6 +87,7 @@ function createTodoElement(task) {
   const taskDeleteBtn = document.createElement("button");
   taskDeleteBtn.classList.add("delete-btn");
   taskDeleteBtn.setAttribute("aria-label", `Delete task ${task.todo}`);
+  taskDeleteBtn.addEventListener("click", () => deleteTask(task.id));
   const deleteIcon = document.createElement("img");
   deleteIcon.src = task.completed
     ? "assets/img/delete-icon-disabled-40.svg"
