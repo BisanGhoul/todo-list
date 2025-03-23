@@ -5,23 +5,35 @@ const taskList = document.querySelector("[data-tasks]");
 let tasks = [];
 
 async function init() {
-     tasks = await fetchTodos();
-     tasks.forEach((task) => taskList.appendChild(createTodoElement(task)));
+  tasks = await loadTasks();
+  tasks.forEach((task) => taskList.appendChild(createTodoElement(task)));
 
-    console.log(tasks); 
+  console.log(tasks);
 }
 
 init();
 
+async function loadTasks() {
+  const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  if (storedTasks.length > 0) {
+    return storedTasks;
+  } else {
+    const fetchedTasks = await fetchTodos();
+    localStorage.setItem("tasks", JSON.stringify(fetchedTasks));
+    return fetchedTasks;
+  }
+}
+
 async function fetchTodos() {
-    try {
-        const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
-        const data = await response.json();
-        return data.todos;
-    } catch (error) {
-        console.error("Error fetching todos:", error);
-        return [];
-    }
+  try {
+    const response = await fetch(`${API_URL}?limit=${TODO_LIMIT}`);
+    const data = await response.json();
+    return data.todos;
+  } catch (error) {
+    console.error("Error fetching todos:", error);
+    return [];
+  }
 }
 
 function createTodoElement(task) {
@@ -29,14 +41,12 @@ function createTodoElement(task) {
   li.classList.add("todo-item");
   if (task.completed) li.classList.add("completed");
 
-  // Checkbox
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = `task-${task.id}`;
   checkbox.checked = task.completed;
   checkbox.setAttribute("aria-checked", task.completed.toString());
 
-  // Label
   const taskLabel = document.createElement("label");
   taskLabel.htmlFor = `task-${task.id}`;
   if (task.completed) {
@@ -47,7 +57,6 @@ function createTodoElement(task) {
     taskLabel.textContent = task.todo;
   }
 
-  // Edit Button
   const taskEditBtn = document.createElement("button");
   taskEditBtn.classList.add("edit-btn");
   taskEditBtn.setAttribute("aria-label", `Edit task ${task.todo}`);
@@ -57,7 +66,6 @@ function createTodoElement(task) {
     : "assets/img/edit-icon-35.svg";
   taskEditBtn.appendChild(taskEditImg);
 
-  // Delete Button
   const taskDeleteBtn = document.createElement("button");
   taskDeleteBtn.classList.add("delete-btn");
   taskDeleteBtn.setAttribute("aria-label", `Delete task ${task.todo}`);
@@ -74,4 +82,3 @@ function createTodoElement(task) {
 
   return li;
 }
-
