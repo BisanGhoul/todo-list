@@ -4,6 +4,7 @@ const TODO_LIMIT = 5;
 const taskList = document.querySelector("[data-tasks]");
 const taskInput = document.querySelector("[data-task-input]");
 const addTaskButton = document.querySelector("[data-new-task-btn]");
+const taskCount = document.querySelector("[data-tasks-count]");
 
 let tasks = [];
 
@@ -14,6 +15,7 @@ async function init() {
     return;
   }
   renderList();
+  updateTaskCount();
 }
 
 init();
@@ -30,6 +32,14 @@ async function loadTasks() {
     return fetchedTasks;
   }
 }
+
+function updateTaskCount() {
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(task => task.completed).length;
+
+    taskCount.textContent = `${completedTasks}/${totalTasks}`;
+}
+
 
 async function deleteTask(taskId) {
   const taskToDelete = tasks.find((task) => task.id === taskId);
@@ -128,8 +138,7 @@ function toggleTaskCompletion(taskId) {
     return task.id === taskId ? { ...task, completed: !task.completed } : task;
   });
 
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  renderList();
+  saveAndRender();
 }
 
 async function addTask() {
@@ -172,6 +181,7 @@ function createTask(content) {
 function saveAndRender() {
   save();
   renderList();
+  updateTaskCount();
 }
 
 function save() {
