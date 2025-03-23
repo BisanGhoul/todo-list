@@ -34,12 +34,11 @@ async function loadTasks() {
 }
 
 function updateTaskCount() {
-    const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(task => task.completed).length;
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed).length;
 
-    taskCount.textContent = `${completedTasks}/${totalTasks}`;
+  taskCount.textContent = `${completedTasks}/${totalTasks}`;
 }
-
 
 async function deleteTask(taskId) {
   tasks = tasks.filter((task) => task.id !== taskId);
@@ -125,12 +124,31 @@ function createTodoElement(task) {
   return li;
 }
 
-function toggleTaskCompletion(taskId) {
+async function toggleTaskCompletion(taskId) {
   tasks = tasks.map((task) => {
     return task.id === taskId ? { ...task, completed: !task.completed } : task;
   });
 
   saveAndRender();
+
+  const updatedTask = tasks.find((task) => task.id === taskId);
+  if (!updatedTask) return;
+
+  try {
+    const response = await fetch(`${API_URL}/${taskId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed: updatedTask.completed }),
+    });
+
+    if (response.ok) {
+      console.log(`Task ${taskId} has been updated successfully`);
+    } else {
+      console.error("Failed to update");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 async function addTask() {
