@@ -31,9 +31,22 @@ async function loadTasks() {
   }
 }
 
-function deleteTask(taskId) {
+async function deleteTask(taskId) {
   tasks = tasks.filter((task) => task.id !== taskId);
   saveAndRender();
+
+  try {
+    const response = await fetch(`${API_URL}/${taskId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      console.log(`Task ${taskId} has ben successfully deleted`);
+    } else {
+      console.error("Task deletion failed");
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+  }
 }
 
 async function fetchTodos() {
