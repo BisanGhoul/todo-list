@@ -5,6 +5,8 @@ const taskList = document.querySelector("[data-tasks]");
 const taskInput = document.querySelector("[data-task-input]");
 const addTaskButton = document.querySelector("[data-new-task-btn]");
 const taskCount = document.querySelector("[data-tasks-count]");
+const searchInput = document.querySelector("[data-search-input]");
+const searchButton = document.querySelector("[data-search-btn]");
 
 let tasks = [];
 
@@ -56,6 +58,22 @@ async function deleteTask(taskId) {
   } catch (error) {
     console.error("Error: ", error);
   }
+}
+
+function search() {
+  const searchTerm = searchInput.value.trim();
+
+  if (searchTerm == null || searchTerm === "") {
+    renderList(tasks, taskList, createTodoElement);    
+  }else{
+  
+  const filteredList = tasks.filter((task) => {
+    return task.todo.includes(searchTerm);
+  })
+
+  renderList(filteredList, taskList, createTodoElement);
+  }
+
 }
 
 async function fetchTodos() {
@@ -220,3 +238,8 @@ addTaskButton.addEventListener("click", addTask);
 taskInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") addTask();
 });
+
+searchButton.addEventListener("click", search);
+searchInput.addEventListener("keypress", (e) => {
+    if(e.key === "Enter") search();
+})
